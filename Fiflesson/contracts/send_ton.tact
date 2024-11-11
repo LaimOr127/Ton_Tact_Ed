@@ -1,0 +1,56 @@
+import "@stdlib/deploy";
+
+import "./message.tact";
+
+//message
+contract SendTon with Deployable {
+    const MinTonForStorage: Int = ton("0.01"); // 1 KB за 2.5 года
+    owner: Address;
+    init() {
+        self.owner = sender();
+    }
+
+    fun onlyOwner(){
+        require(sender() == self.owner, "only owner is allowed to withdraw");
+    }
+
+    receive(){
+        // accept incoming TON transfers
+    }
+
+    receive("withdraw all"){
+        self.onlyOwner();
+        send(SendParameters{
+            to: sender(),
+            bounce: true,
+            value: 0,
+            mode: SendRemainingBalance + SendIgnoreErrors
+        });
+    }
+
+    receive("withdraw safe"){
+        self.onlyOwner();
+        send(SendParameters{
+            to: sender(),
+            bounce: true,
+            value: myBalance() - context().value - self.MinTonForStorage,
+            mode: SendIgnoreErrors + SendRemainingValue
+        });
+    }
+
+    receive(msg: Withdraw){
+        self.onlyOwner();
+        let amount: Int = min(msg.amount, myBalance() - context().value - self.MinTonForStorage);
+        require(amount>0, "Insufficient balance");
+        send(SendParameters{
+            to: sender(),
+            bounce: true,
+            value: amount,
+            mode: SendIgnoreErrors + SendRemainingValue
+        });
+    }
+
+    get fun balance(): Int{
+        return myBalance();
+    }
+}
