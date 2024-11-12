@@ -12,7 +12,6 @@ contract Item with Deployable {
     get fun myAddress(): Address{
         return myAddress();
     }
-
     get fun otherAddress(): Address{
         let init: StateInit = initOf Item2();
         return contractAddress(init);
@@ -30,7 +29,6 @@ contract Item2 with Deployable {
     get fun myAddress(): Address{
         return myAddress();
     }
-
     get fun otherAddress(): Address{
         let init: StateInit = initOf Item();
         return contractAddress(init);
@@ -47,7 +45,6 @@ contract Item3 with Deployable {
     get fun myAddress(): Address{
         return myAddress();
     }
-
     get fun otherAddress(otherId: Int): Address{
         let init: StateInit = initOf Item3(otherId);
         return contractAddress(init);
