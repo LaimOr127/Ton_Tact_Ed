@@ -7,11 +7,16 @@ import { debug } from 'util';
 describe('JettonWallet', () => {
     let blockchain: Blockchain;
     let jettonWallet: SandboxContract<JettonWallet>;
-    let deployer: SandboxContract<TreasuryContract>
+    let parent: SandboxContract<TreasuryContract>;
+    let owner: SandboxContract<TreasuryContract>;
+
     beforeEach(async () => {
         blockchain = await Blockchain.create();
 
-        jettonWallet = blockchain.openContract(await jettonWallet.fromInit());
+        parent = await blockchain.treasury('parent');
+        owner = await blockchain.treasury('owner');
+
+        jettonWallet = blockchain.openContract(await jettonWallet.fromInit(parent.address, owner.address));
         //console.log("details - ", debug)
         const deployer = await blockchain.treasury('deployer');
         const deployResult = await jettonWallet.send(
