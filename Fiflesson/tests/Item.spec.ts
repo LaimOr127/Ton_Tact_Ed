@@ -98,7 +98,7 @@ describe('Item', () => {
         const deployer = await blockchain.treasury('deployer');
         const notExistAddress = await item3.getOtherAddress(14n);
 
-        console.log("notExistAddress - ", notExistAddress)
+        //console.log("notExistAddress - ", notExistAddress)
 
         await item3.send(deployer.getSender(), {
             value: toNano("0.2")
@@ -114,6 +114,6 @@ describe('Item', () => {
 
         const id = await newItem.getId()
 
-        console.log("id - ", id)
+        //console.log("id - ", id)
     })
 });
